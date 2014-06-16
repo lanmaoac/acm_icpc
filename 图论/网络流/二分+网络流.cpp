@@ -5,9 +5,9 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
-const int INF = 1<<28;
+const int   INF = 1<<25;
 const int  MAXN = 250;
-const int  MAXM = 250*250*2;
+const int  MAXM = 250*250*2+1000;
 using namespace std;
 int k,c,m;
 int edge[250][250];
@@ -96,19 +96,18 @@ int sap(const int& start,const int& end)
         }
         return ret;
 }
-void build(int m)
+void build(int mid)
 {
     init();
     for(int i=k+1;i<=k+c;i++)  {addedge(0,i,1);addedge(i,0,0);}
     for(int i=1;i<=k;i++) {addedge(i,k+c+1,m);addedge(k+c+1,i,0);}
     for(int i=k+1;i<=k+c;i++)
         for(int j=1;j<=k;j++)
-            if(edge[i][j]<= m) {addedge(i,j,1);addedge(j,i,0);}
-
+            if(edge[i][j]<=mid) {addedge(i,j,1);addedge(j,i,0);}
 }
-bool check(int m)
+bool check(int mid)
 {
-  build(m);
+  build(mid);
   int ans=sap(0,k+c+1);
   if(ans==c) return true;
   else return false;
@@ -128,16 +127,18 @@ int gao()
 }
 int main()
 {
-  memset(edge,0,sizeof(edge));
-  scanf("%d%d%d",&k,&c,&m);
-  for(int i=1;i<=k+c;i++)
+   while(scanf("%d%d%d",&k,&c,&m)!=EOF)
+  {
+   memset(edge,0,sizeof(edge));
+   for(int i=1;i<=k+c;i++)
     for(int j=1;j<=k+c;j++)
       {
         scanf("%d",&edge[i][j]);
         if(!edge[i][j]) edge[i][j]=INF;
       }
-  floyd();
-  int ans=gao();
-  printf("%d\n",ans);
+   floyd();
+   int ans=gao();
+   printf("%d\n",ans);
+  }
   return 0;
 }
